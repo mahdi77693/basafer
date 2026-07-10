@@ -1,6 +1,6 @@
 const translations = {
   en: {
-    store_name: "basafer Store",
+    store_name: "BASFER",
     nav_dashboard: "Dashboard",
     nav_products: "Products",
     nav_orders: "Orders",
@@ -501,7 +501,7 @@ let mockProducts = [
   {
     id: 4,
     title: "Cosmo Obsidian Hoodie",
-    price: 10.5,
+    price: 10,
     minStock: 5,
     maxStock: 40,
     category: "clothing",
