@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl" class="white">
+<html lang="en" dir="ltr" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,7 +18,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./index.css" />
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body
     class="h-screen overflow-hidden flex selection:bg-brand-purple selection:text-white antialiased transition-colors duration-300"
@@ -40,7 +40,20 @@
         class="h-24 flex items-center justify-center border-b border-gray-200/20 dark:border-white/5"
       >
         <h1 class="text-2xl font-bold text-gradient flex items-center gap-2">
-          <span data-i18n="store_name">basafer </span>
+          <svg
+            class="w-7 h-7 text-brand-purple icon-glow"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            ></path>
+          </svg>
+          <span data-i18n="store_name">basafer Store</span>
         </h1>
       </div>
 
@@ -139,10 +152,11 @@
           <span class="font-medium" data-i18n="nav_customers">Customers</span>
         </a>
 
+        <!-- -->
         <a
           href="#"
           onclick="switchPage('customer_details')"
-          class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/5 transition-all rtl:pr-8 rtl:pl-4"
+          class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/5 transition-all"
           data-page="customer_details"
         >
           <svg
@@ -346,27 +360,62 @@
             </svg>
           </button>
 
-          <!-- Notifications Button -->
-          <button
-            class="relative p-2 text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-white/5 border border-gray-200/10 dark:border-white/10 w-10 h-10 flex items-center justify-center shrink-0"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <!-- Notifications Button Container -->
+          <div class="relative shrink-0">
+            <button
+              onclick="toggleNotificationsDropdown(event)"
+              id="notification-bell-btn"
+              class="relative p-2 text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-white/5 border border-gray-200/10 dark:border-white/10 w-10 h-10 flex items-center justify-center"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              ></path>
-            </svg>
-            <span
-              class="absolute top-0 right-0 rtl:left-0 rtl:right-auto w-2.5 h-2.5 bg-brand-teal rounded-full shadow-[0_0_8px_rgba(20,184,166,0.8)] border-2 border-white dark:border-gray-900"
-            ></span>
-          </button>
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                ></path>
+              </svg>
+              <span
+                id="notif-badge"
+                class="absolute -top-1 -right-1 rtl:-left-1 rtl:-right-auto w-5 h-5 bg-brand-teal text-white text-[9px] font-bold rounded-full shadow-[0_0_8px_rgba(20,184,166,0.8)] border-2 border-white dark:border-gray-900 flex items-center justify-center animate-pulse"
+                >4</span
+              >
+            </button>
+            <!-- -->
+            <!-- Floating Solid Non-Transparent Notifications Dropdown with optimized layout-safe positioning -->
+            <div
+              id="notifications-dropdown"
+              class="absolute right-0 left-auto rtl:left-0 rtl:right-auto mt-2 w-80 solid-dropdown rounded-2xl shadow-xl py-2 hidden z-50"
+            >
+              <div
+                class="px-4 py-2 border-b border-gray-200/20 dark:border-white/5 flex justify-between items-center"
+              >
+                <span
+                  class="font-bold text-xs uppercase tracking-wider text-gray-400"
+                  data-i18n="lbl_notifications_title"
+                  >Interactive Dispatch Logs</span
+                >
+                <button
+                  onclick="clearNotifBadge()"
+                  class="text-[10px] text-brand-purple font-semibold hover:underline"
+                  data-i18n="lbl_mark_read"
+                >
+                  Mark all read
+                </button>
+              </div>
+              <div
+                class="divide-y divide-gray-200/10 dark:divide-white/5 max-h-64 overflow-y-auto"
+                id="notif-list-container"
+              >
+                <!-- Injected dynamically via JS to accommodate custom simplified templates -->
+              </div>
+            </div>
+          </div>
 
           <!-- Profile Indicator -->
           <div
@@ -2472,8 +2521,9 @@
       id="addProductModal"
       class="fixed inset-0 bg-black/60 backdrop-blur-md hidden items-center justify-center z-50 p-4 transition-all duration-300"
     >
+      <!-- -->
       <div
-        class="glass-panel w-full max-w-lg rounded-3xl overflow-hidden p-6 relative transform scale-95 transition-all duration-300 flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
+        class="solid-modal w-full max-w-lg rounded-3xl overflow-hidden p-6 relative transform scale-95 transition-all duration-300 flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
       >
         <button
           onclick="closeModal()"
@@ -2534,7 +2584,7 @@
             />
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label
                 class="block text-xs font-semibold uppercase text-gray-500 mb-1"
@@ -2552,16 +2602,50 @@
             <div>
               <label
                 class="block text-xs font-semibold uppercase text-gray-500 mb-1"
-                data-i18n="lbl_prod_stock"
-                >Stock Qty</label
+                data-i18n="lbl_prod_min_stock"
+                >Minimum Stock</label
               >
               <input
                 type="number"
-                id="newProdStock"
+                id="newProdMinStock"
                 required
+                oninput="validateModalStock()"
                 class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all"
               />
             </div>
+            <div>
+              <label
+                class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                data-i18n="lbl_prod_max_stock"
+                >Maximum Stock</label
+              >
+              <input
+                type="number"
+                id="newProdMaxStock"
+                required
+                oninput="validateModalStock()"
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+              data-i18n="lbl_prod_stock"
+              >Stock Qty</label
+            >
+            <input
+              type="number"
+              id="newProdStock"
+              required
+              oninput="validateModalStock()"
+              class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+            />
+            <p
+              id="modalStockWarning"
+              class="text-xs text-red-500 font-bold mt-1 hidden"
+            ></p>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -2650,6 +2734,7 @@
             </button>
             <button
               type="submit"
+              id="saveProductBtn"
               class="w-full sm:w-auto px-5 py-3 rounded-xl bg-brand-purple hover:bg-brand-purple/90 text-white font-semibold transition-colors shadow-lg shadow-brand-purple/20"
               data-i18n="btn_save"
             >
@@ -2665,8 +2750,9 @@
       id="addCustomerModal"
       class="fixed inset-0 bg-black/60 backdrop-blur-md hidden items-center justify-center z-50 p-4 transition-all duration-300"
     >
+      <!-- -->
       <div
-        class="glass-panel w-full max-w-lg rounded-3xl overflow-hidden p-6 relative transform scale-95 transition-all duration-300 flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
+        class="solid-modal w-full max-w-lg rounded-3xl overflow-hidden p-6 relative transform scale-95 transition-all duration-300 flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
       >
         <button
           onclick="closeCustomerModal()"
@@ -2792,6 +2878,6 @@
       id="toast-container"
       class="fixed top-6 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-6 rtl:sm:right-auto rtl:sm:left-6 z-50 flex flex-col gap-2 w-[90%] sm:w-auto max-w-sm"
     ></div>
-    <script src="./index.js"></script>
+    <script src="index.js"></script>
   </body>
 </html>

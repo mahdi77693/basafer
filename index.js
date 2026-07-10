@@ -1,6 +1,6 @@
 const translations = {
   en: {
-    store_name: "BASAFER",
+    store_name: "basafer Store",
     nav_dashboard: "Dashboard",
     nav_products: "Products",
     nav_orders: "Orders",
@@ -169,6 +169,8 @@ const translations = {
     lbl_prod_title: "Product Title",
     lbl_prod_price: "Price ($)",
     lbl_prod_stock: "Stock Qty",
+    lbl_prod_max_stock: "Maximum Stock",
+    lbl_prod_min_stock: "Minimum Stock",
     lbl_prod_category: "Category",
     lbl_prod_img: "Visual Colorway",
     opt_instagram: "Instagram Grid",
@@ -204,9 +206,11 @@ const translations = {
     acc_vip: "VIP Member",
     acc_active: "Active Account",
     acc_inactive: "Inactive Account",
+    lbl_notifications_title: "Interactive Dispatch Logs",
+    lbl_mark_read: "Mark all read",
   },
   ar: {
-    store_name: "باسفر",
+    store_name: "باسفر ستور",
     nav_dashboard: "لوحة القيادة",
     nav_products: "المنتجات",
     nav_orders: "الطلبات",
@@ -378,6 +382,8 @@ const translations = {
     lbl_prod_title: "اسم المنتج",
     lbl_prod_price: "السعر ($)",
     lbl_prod_stock: "الكمية بالمخزن",
+    lbl_prod_max_stock: "الحد الأقصى للمخزون",
+    lbl_prod_min_stock: "الحد الأدنى للمخزون",
     lbl_prod_category: "الفئة",
     lbl_prod_img: "تنسيق ألوان الغلاف البصري",
     opt_instagram: "انستغرام - شبكة الخلاصة",
@@ -413,6 +419,8 @@ const translations = {
     acc_vip: "كبار الشخصيات VIP",
     acc_active: "حساب نشط وفعال",
     acc_inactive: "حساب خامل / غير نشط",
+    lbl_notifications_title: "سجلات وبريد الوارد التفاعلي",
+    lbl_mark_read: "تعليم الكل كمقروء",
   },
 };
 
@@ -462,6 +470,7 @@ let mockProducts = [
     title: "Aether VR Headset",
     price: 549.99,
     stock: 12,
+    minStock: 5,
     maxStock: 30,
     category: "electronics",
     color: "from-purple-500 to-indigo-600",
@@ -472,6 +481,7 @@ let mockProducts = [
     title: "Quantum Smartwatch",
     price: 299.0,
     stock: 4,
+    minStock: 5,
     maxStock: 25,
     category: "electronics",
     color: "from-teal-400 to-emerald-600",
@@ -482,6 +492,7 @@ let mockProducts = [
     title: "Neon Cyber Keyboard",
     price: 189.5,
     stock: 21,
+    minStock: 10,
     maxStock: 50,
     category: "accessories",
     color: "from-pink-500 to-rose-600",
@@ -490,8 +501,8 @@ let mockProducts = [
   {
     id: 4,
     title: "Cosmo Obsidian Hoodie",
-    price: 85.0,
-    stock: 0,
+    price: 10.5,
+    minStock: 5,
     maxStock: 40,
     category: "clothing",
     color: "from-blue-500 to-cyan-500",
@@ -624,15 +635,15 @@ function safeGetItem(key) {
 
 // --- Core Application Logic ---
 function saveToStorage() {
-  safeSetItem("basafer_products", JSON.stringify(mockProducts));
-  safeSetItem("basafer_customers", JSON.stringify(mockCustomers));
-  safeSetItem("basafer_orders", JSON.stringify(mockOrders));
-  safeSetItem("basafer_campaigns", JSON.stringify(mockCampaigns));
+  safeSetItem("nexus_products", JSON.stringify(mockProducts));
+  safeSetItem("nexus_customers", JSON.stringify(mockCustomers));
+  safeSetItem("nexus_orders", JSON.stringify(mockOrders));
+  safeSetItem("nexus_campaigns", JSON.stringify(mockCampaigns));
 }
 
 function loadFromStorage() {
   // Only override defaults if stored array exists and is not empty
-  const storedProds = safeGetItem("basafer_products");
+  const storedProds = safeGetItem("nexus_products");
   if (storedProds) {
     try {
       const parsed = JSON.parse(storedProds);
@@ -644,7 +655,7 @@ function loadFromStorage() {
     }
   }
 
-  const storedCusts = safeGetItem("basafer_customers");
+  const storedCusts = safeGetItem("nexus_customers");
   if (storedCusts) {
     try {
       const parsed = JSON.parse(storedCusts);
@@ -656,7 +667,7 @@ function loadFromStorage() {
     }
   }
 
-  const storedOrders = safeGetItem("basafer_orders");
+  const storedOrders = safeGetItem("nexus_orders");
   if (storedOrders) {
     try {
       const parsed = JSON.parse(storedOrders);
@@ -668,7 +679,7 @@ function loadFromStorage() {
     }
   }
 
-  const storedCamps = safeGetItem("basafer_campaigns");
+  const storedCamps = safeGetItem("nexus_campaigns");
   if (storedCamps) {
     try {
       const parsed = JSON.parse(storedCamps);
@@ -680,8 +691,8 @@ function loadFromStorage() {
     }
   }
 
-  if (safeGetItem("basafer_admin_name")) {
-    const name = safeGetItem("basafer_admin_name");
+  if (safeGetItem("nexus_admin_name")) {
+    const name = safeGetItem("nexus_admin_name");
     const adminHeader = document.getElementById("header-admin-name");
     const adminSetting = document.getElementById("settings-admin-name");
     if (adminHeader) adminHeader.innerText = name;
@@ -885,7 +896,7 @@ function toggleLanguage() {
   const htmlElement = document.documentElement;
   const currentLang = htmlElement.getAttribute("lang") || "en";
   const targetLang = currentLang === "en" ? "ar" : "en";
-  safeSetItem("basafer_lang", targetLang);
+  safeSetItem("nexus_lang", targetLang);
   setLanguage(targetLang);
 }
 
@@ -908,7 +919,7 @@ function renderProducts(filteredList = null) {
     if (isOutOfStock) {
       glowColor = "bg-red-500";
       stateText = isRtl ? "نفذت الكمية" : "Out of Stock";
-    } else if (p.stock <= 5) {
+    } else if (p.stock <= p.minStock) {
       glowColor = "bg-amber-500";
       stateText = isRtl ? "كمية محدودة" : "Low Stock";
     }
@@ -934,7 +945,7 @@ function renderProducts(filteredList = null) {
                             </div>
                             <div class="space-y-1.5">
                                 <div class="flex justify-between text-xs text-gray-500 font-medium">
-                                    <span>${p.stock} / ${p.maxStock} ${isRtl ? "القطع المتبقية" : "Items Remaining"}</span>
+                                    <span>${p.stock} ${isRtl ? "قطعة متوفرة" : "Items In Stock"}</span>
                                     <span class="flex items-center gap-1">
                                         <span class="w-2 h-2 rounded-full ${glowColor} inline-block animate-pulse shrink-0"></span>
                                         ${stateText}
@@ -944,14 +955,19 @@ function renderProducts(filteredList = null) {
                                     <div class="h-full ${glowColor} rounded-full transition-all duration-500" style="width: ${percent}%"></div>
                                 </div>
                             </div>
-                            <div class="flex justify-between items-center bg-gray-100/50 dark:bg-white/5 px-3 py-1.5 rounded-xl text-xs w-full">
-                                <span class="text-gray-400 whitespace-nowrap">Quick Stock:</span>
-                                <div class="flex items-center gap-2">
-                                    <button onclick="changeStock(${p.id}, -1)" class="w-6 h-6 rounded bg-gray-200 dark:bg-white/10 flex items-center justify-center font-bold text-gray-600 dark:text-white hover:bg-brand-purple hover:text-white transition-all shrink-0">-</button>
-                                    <span class="font-bold text-gray-800 dark:text-white">${p.stock}</span>
-                                    <button onclick="changeStock(${p.id}, 1)" class="w-6 h-6 rounded bg-gray-200 dark:bg-white/10 flex items-center justify-center font-bold text-gray-600 dark:text-white hover:bg-brand-teal hover:text-white transition-all shrink-0">+</button>
+                            
+                            <!-- Detailed Stock Limits (Max & Min) -->
+                            <div class="grid grid-cols-2 gap-2 bg-gray-100/30 dark:bg-white/5 px-3 py-2 rounded-xl text-[10px] sm:text-xs w-full text-center">
+                                <div>
+                                    <span class="text-gray-400 block">${isRtl ? "الحد الأدنى:" : "Min Stock:"}</span>
+                                    <span class="font-bold text-gray-800 dark:text-white">${p.minStock || 0}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 block">${isRtl ? "الحد الأقصى:" : "Max Stock:"}</span>
+                                    <span class="font-bold text-gray-800 dark:text-white">${p.maxStock || 0}</span>
                                 </div>
                             </div>
+
                             <div class="flex gap-2 pt-2 border-t border-gray-100 dark:border-white/5 mt-auto">
                                 <button onclick="deleteProduct(${p.id})" class="flex-1 py-2.5 rounded-xl border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs font-semibold whitespace-nowrap">
                                     ${translations[currentLang]["btn_cancel"] || "Delete"}
@@ -967,18 +983,8 @@ function renderProducts(filteredList = null) {
   });
 }
 
-function changeStock(id, val) {
-  const prod = mockProducts.find((p) => p.id === id);
-  if (prod) {
-    prod.stock = Math.max(0, prod.stock + val);
-    saveToStorage();
-    renderProducts();
-    showNotification(`Stock for ${prod.title} updated successfully!`);
-  }
-}
-
 function generateInstantPromo() {
-  const prefix = document.getElementById("promoCodePrefix").value || "basafer";
+  const prefix = document.getElementById("promoCodePrefix").value || "BASAFER";
   const randomCode =
     prefix.toUpperCase() + "-" + Math.floor(1000 + Math.random() * 9000);
   showNotification(
@@ -1304,7 +1310,7 @@ function saveGlobalSettings(e) {
   e.preventDefault();
   const newAdminName = document.getElementById("settings-admin-name").value;
   document.getElementById("header-admin-name").innerText = newAdminName;
-  safeSetItem("basafer_admin_name", newAdminName);
+  safeSetItem("nexus_admin_name", newAdminName);
 
   safeSetItem(
     "settings_notifications",
@@ -1360,6 +1366,11 @@ function openModal(productId = null) {
 
   form.reset();
   document.getElementById("editProdId").value = "";
+  document.getElementById("modalStockWarning").classList.add("hidden");
+  document.getElementById("saveProductBtn").disabled = false;
+  document
+    .getElementById("saveProductBtn")
+    .classList.remove("opacity-50", "cursor-not-allowed");
 
   if (productId) {
     const prod = mockProducts.find((p) => p.id === productId);
@@ -1368,6 +1379,8 @@ function openModal(productId = null) {
       document.getElementById("newProdTitle").value = prod.title;
       document.getElementById("newProdPrice").value = prod.price;
       document.getElementById("newProdStock").value = prod.stock;
+      document.getElementById("newProdMinStock").value = prod.minStock || 0;
+      document.getElementById("newProdMaxStock").value = prod.maxStock || 100;
       document.getElementById("newProdCategory").value = prod.category;
       document.getElementById("newProdColor").value = prod.color;
 
@@ -1379,6 +1392,8 @@ function openModal(productId = null) {
           : "Update details of this active dynamic catalog item.";
     }
   } else {
+    document.getElementById("newProdMinStock").value = 5;
+    document.getElementById("newProdMaxStock").value = 50;
     titleEl.innerText =
       translations[currentLang]["modal_add_title"] || "Create Cyber Product";
     subtitleEl.innerText =
@@ -1389,15 +1404,15 @@ function openModal(productId = null) {
   modal.classList.remove("hidden");
   modal.classList.add("flex");
   setTimeout(() => {
-    modal.querySelector(".glass-panel").classList.remove("scale-95");
-    modal.querySelector(".glass-panel").classList.add("scale-100");
+    modal.querySelector(".solid-modal").classList.remove("scale-95");
+    modal.querySelector(".solid-modal").classList.add("scale-100");
   }, 10);
 }
 
 function closeModal() {
   const modal = document.getElementById("addProductModal");
-  modal.querySelector(".glass-panel").classList.remove("scale-100");
-  modal.querySelector(".glass-panel").classList.add("scale-95");
+  modal.querySelector(".solid-modal").classList.remove("scale-100");
+  modal.querySelector(".solid-modal").classList.add("scale-95");
   setTimeout(() => {
     modal.classList.remove("flex");
     modal.classList.add("hidden");
@@ -1411,6 +1426,10 @@ function saveProduct(e) {
   const title = document.getElementById("newProdTitle").value;
   const price = parseFloat(document.getElementById("newProdPrice").value);
   const stock = parseInt(document.getElementById("newProdStock").value);
+  const minStock =
+    parseInt(document.getElementById("newProdMinStock").value) || 0;
+  const maxStock =
+    parseInt(document.getElementById("newProdMaxStock").value) || 100;
   const category = document.getElementById("newProdCategory").value;
   const color = document.getElementById("newProdColor").value;
   const imageInput = document.getElementById("newProdImage");
@@ -1422,7 +1441,8 @@ function saveProduct(e) {
         prod.title = title;
         prod.price = price;
         prod.stock = stock;
-        prod.maxStock = Math.max(prod.maxStock, stock * 2);
+        prod.minStock = minStock;
+        prod.maxStock = maxStock;
         prod.category = category;
         prod.color = color;
         if (imgData) prod.image = imgData;
@@ -1434,7 +1454,8 @@ function saveProduct(e) {
         title,
         price,
         stock,
-        maxStock: stock * 2 || 20,
+        minStock,
+        maxStock,
         category,
         color,
         image: imgData,
@@ -1465,20 +1486,137 @@ function deleteProduct(id) {
   showNotification("Product removed from catalog.", "success");
 }
 
+function validateModalStock() {
+  const stockVal = parseInt(document.getElementById("newProdStock").value) || 0;
+  const minVal =
+    parseInt(document.getElementById("newProdMinStock").value) || 0;
+  const maxVal =
+    parseInt(document.getElementById("newProdMaxStock").value) || 0;
+  const saveBtn = document.getElementById("saveProductBtn");
+  const warningText = document.getElementById("modalStockWarning");
+  const currentLang = document.documentElement.getAttribute("lang") || "en";
+
+  if (stockVal < minVal || stockVal > maxVal) {
+    saveBtn.disabled = true;
+    saveBtn.classList.add("opacity-50", "cursor-not-allowed");
+    if (warningText) {
+      warningText.innerText =
+        currentLang === "ar"
+          ? `تنبيه: يجب أن تكون الكمية الحالية بين الحد الأدنى (${minVal}) والحد الأقصى (${maxVal})!`
+          : `Warning: Current stock must be between Min (${minVal}) and Max (${maxVal}) limits!`;
+      warningText.classList.remove("hidden");
+    }
+  } else {
+    saveBtn.disabled = false;
+    saveBtn.classList.remove("opacity-50", "cursor-not-allowed");
+    if (warningText) {
+      warningText.classList.add("hidden");
+    }
+  }
+}
+
+// --- Notifications Interactive Center ---
+let unreadNotifs = 4;
+
+function toggleNotificationsDropdown(e) {
+  e.stopPropagation();
+  const dropdown = document.getElementById("notifications-dropdown");
+  if (dropdown) {
+    dropdown.classList.toggle("hidden");
+    loadNotifications();
+  }
+}
+
+function loadNotifications() {
+  const container = document.getElementById("notif-list-container");
+  if (!container) return;
+  const currentLang = document.documentElement.getAttribute("lang") || "en";
+  container.innerHTML = "";
+
+  // 1. Dynamic Low Stock Warnings
+  const lowStockProducts = mockProducts.filter((p) => p.stock <= p.minStock);
+  lowStockProducts.forEach((p) => {
+    const warningText =
+      currentLang === "ar"
+        ? `تحذير: منتج "${p.title}" على وشك النفاد! (الكمية الحالية: ${p.stock})`
+        : `Warning: Product "${p.title}" is about to run out! (Stock left: ${p.stock})`;
+
+    container.innerHTML += `
+                    <div onclick="switchPage('products')" class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-white/5 cursor-pointer flex gap-3 transition-colors text-left rtl:text-right border-b border-gray-200/10 dark:border-white/5 items-center">
+                        <div class="p-2 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0 w-8 h-8">
+                            <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-xs text-amber-500 font-bold leading-relaxed break-words">${warningText}</p>
+                        </div>
+                    </div>
+                `;
+  });
+
+  // 2. Simple Messages Indicator
+  const messagesLabel = currentLang === "ar" ? "الرسائل" : "Messages";
+  container.innerHTML += `
+                <div class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-white/5 flex gap-3 transition-colors text-left rtl:text-right border-b border-gray-200/10 dark:border-white/5 items-center">
+                    <div class="p-2 rounded-xl bg-brand-purple/10 flex items-center justify-center shrink-0 w-8 h-8">
+                        <svg class="w-4 h-4 text-brand-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                    </div>
+                    <div class="flex-1 flex justify-between items-center">
+                        <span class="text-xs font-bold text-gray-700 dark:text-gray-200">${messagesLabel}</span>
+                        <span class="bg-brand-purple text-white text-[10px] font-bold px-2 py-0.5 rounded-full">2</span>
+                    </div>
+                </div>
+            `;
+
+  // 3. Customer Inquiry Notification with Badge 2
+  const inquiryText =
+    currentLang === "ar"
+      ? `استفسار من العميل "أحمد خالد"`
+      : `Inquiry from customer "Ahmed Khaled"`;
+
+  container.innerHTML += `
+                <div onclick="switchPage('customer_details'); loadCustomerProfile('1002');" class="px-4 py-3 hover:bg-gray-100/50 dark:hover:bg-white/5 cursor-pointer flex gap-3 transition-colors text-left rtl:text-right items-center">
+                    <div class="p-2 rounded-xl bg-brand-teal/10 flex items-center justify-center shrink-0 w-8 h-8">
+                        <svg class="w-4 h-4 text-brand-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="flex-1 flex justify-between items-center">
+                        <span class="text-xs font-bold text-gray-700 dark:text-gray-200">${inquiryText}</span>
+                        <span class="bg-brand-teal text-white text-[10px] font-bold px-2 py-0.5 rounded-full">2</span>
+                    </div>
+                </div>
+            `;
+}
+
+function handleNotifClick(id) {
+  // Replaced with structured action handlers above for direct control
+}
+
+function clearNotifBadge() {
+  unreadNotifs = 0;
+  const badge = document.getElementById("notif-badge");
+  if (badge) badge.classList.add("hidden");
+  showNotification("All alerts marked as read", "success");
+}
+
+// Close dropdown when clicking elsewhere
+window.addEventListener("click", () => {
+  const dropdown = document.getElementById("notifications-dropdown");
+  if (dropdown) dropdown.classList.add("hidden");
+});
+
 function openCustomerModal() {
   const modal = document.getElementById("addCustomerModal");
   modal.classList.remove("hidden");
   modal.classList.add("flex");
   setTimeout(() => {
-    modal.querySelector(".glass-panel").classList.remove("scale-95");
-    modal.querySelector(".glass-panel").classList.add("scale-100");
+    modal.querySelector(".solid-modal").classList.remove("scale-95");
+    modal.querySelector(".solid-modal").classList.add("scale-100");
   }, 10);
 }
 
 function closeCustomerModal() {
   const modal = document.getElementById("addCustomerModal");
-  modal.querySelector(".glass-panel").classList.remove("scale-100");
-  modal.querySelector(".glass-panel").classList.add("scale-95");
+  modal.querySelector(".solid-modal").classList.remove("scale-100");
+  modal.querySelector(".solid-modal").classList.add("scale-95");
   setTimeout(() => {
     modal.classList.remove("flex");
     modal.classList.add("hidden");
@@ -1972,7 +2110,7 @@ function updateChartsTheme(theme) {
 window.addEventListener("DOMContentLoaded", () => {
   loadFromStorage();
 
-  const savedLang = safeGetItem("basafer_lang") || "en";
+  const savedLang = safeGetItem("nexus_lang") || "en";
   setLanguage(savedLang);
 });
 
