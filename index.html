@@ -1,0 +1,2797 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>basafer Creative E-commerce Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body
+    class="h-screen overflow-hidden flex selection:bg-brand-purple selection:text-white antialiased transition-colors duration-300"
+  >
+    <!-- Mobile Navigation Overlay (Backdrop) -->
+    <div
+      id="sidebar-backdrop"
+      onclick="toggleSidebar()"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden lg:hidden"
+    ></div>
+
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="w-64 glass-panel m-4 rounded-3xl hidden lg:flex flex-col fixed inset-y-0 right-4 lg:relative lg:inset-y-auto lg:right-auto z-40 transition-all duration-300"
+    >
+      <!-- Logo -->
+      <div
+        class="h-24 flex items-center justify-center border-b border-gray-200/20 dark:border-white/5"
+      >
+        <h1 class="text-2xl font-bold text-gradient flex items-center gap-2">
+          <span data-i18n="store_name">basafer </span>
+        </h1>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2" id="sidebar-nav">
+        <a
+          href="#"
+          onclick="switchPage('dashboard')"
+          class="nav-item nav-item-active flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+          data-page="dashboard"
+        >
+          <svg
+            class="w-5 h-5 nav-item-icon-active"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+            ></path>
+          </svg>
+          <span class="font-medium" data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+
+        <a
+          href="#"
+          onclick="switchPage('products')"
+          class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/5 transition-all"
+          data-page="products"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+            ></path>
+          </svg>
+          <span class="font-medium" data-i18n="nav_products">Products</span>
+        </a>
+
+        <a
+          href="#"
+          onclick="switchPage('orders')"
+          class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/5 transition-all"
+          data-page="orders"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+            ></path>
+          </svg>
+          <span class="font-medium" data-i18n="nav_orders">Orders</span>
+          <span
+            id="sidebar-orders-badge"
+            class="ml-auto rtl:mr-auto rtl:ml-0 bg-brand-teal/10 dark:bg-brand-teal/20 text-brand-teal text-xs font-bold px-2 py-0.5 rounded-full"
+            >5</span
+          >
+        </a>
+
+        <a
+          href="#"
+          onclick="switchPage('customers')"
+          class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/5 transition-all"
+          data-page="customers"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            ></path>
+          </svg>
+          <span class="font-medium" data-i18n="nav_customers">Customers</span>
+        </a>
+
+        <a
+          href="#"
+          onclick="switchPage('customer_details')"
+          class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/5 transition-all rtl:pr-8 rtl:pl-4"
+          data-page="customer_details"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+            ></path>
+          </svg>
+          <span class="font-medium text-sm" data-i18n="nav_customer_details"
+            >Customer Details</span
+          >
+        </a>
+
+        <a
+          href="#"
+          onclick="switchPage('analytics')"
+          class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/5 transition-all"
+          data-page="analytics"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            ></path>
+          </svg>
+          <span class="font-medium" data-i18n="nav_analytics">Analytics</span>
+        </a>
+
+        <a
+          href="#"
+          onclick="switchPage('marketing')"
+          class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/5 transition-all"
+          data-page="marketing"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"
+            ></path>
+          </svg>
+          <span class="font-medium" data-i18n="nav_marketing"
+            >Marketing Hub</span
+          >
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="p-4 border-t border-gray-200/20 dark:border-white/5">
+        <a
+          href="#"
+          onclick="switchPage('settings')"
+          class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/5 transition-all"
+          data-page="settings"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            ></path>
+          </svg>
+          <span class="font-medium" data-i18n="nav_settings">Settings</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative z-10">
+      <!-- Header -->
+      <header
+        class="glass-panel m-4 mt-4 lg:ml-0 rtl:lg:ml-4 rtl:lg:mr-0 mb-0 p-4 rounded-3xl flex flex-col sm:flex-row justify-between items-center gap-4 z-20"
+      >
+        <!-- Search Bar + Mobile Menu Hamburger layout (Positioned physically to the RIGHT of search on mobile/Arabic) -->
+        <div
+          class="flex items-center justify-between gap-3 w-full sm:w-auto sm:max-w-md order-1"
+        >
+          <!-- Hamburger Menu Button -->
+          <button
+            onclick="toggleSidebar()"
+            class="lg:hidden shrink-0 text-gray-600 dark:text-white p-2.5 bg-gray-100/50 dark:bg-white/5 rounded-full border border-gray-200/50 dark:border-white/10 hover:bg-brand-purple hover:text-white transition-all flex items-center justify-center order-2 rtl:order-1"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+          <!-- Search Input -->
+          <div class="relative flex-1 w-full order-1 rtl:order-2">
+            <input
+              type="text"
+              data-i18n-placeholder="search_placeholder"
+              placeholder="Search product, order, or customer..."
+              class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white text-sm rounded-full focus:ring-2 focus:ring-brand-purple focus:border-transparent block pl-10 pr-4 rtl:pr-10 rtl:pl-4 p-2.5 outline-none transition-all placeholder-gray-400"
+            />
+            <div
+              class="absolute inset-y-0 left-0 rtl:right-0 rtl:left-auto flex items-center pl-3 rtl:pr-3 pointer-events-none"
+            >
+              <svg
+                class="w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Tools -->
+        <div
+          class="flex items-center justify-center sm:justify-end gap-3 sm:gap-4 w-full sm:w-auto order-2"
+        >
+          <!-- Language Toggle Button -->
+          <button
+            onclick="toggleLanguage()"
+            class="p-2 text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-white/5 font-semibold text-xs sm:text-sm w-10 h-10 flex items-center justify-center border border-gray-200 dark:border-white/10 shrink-0"
+          >
+            <span id="lang-text">AR</span>
+          </button>
+
+          <!-- Theme Toggle Button -->
+          <button
+            onclick="toggleTheme()"
+            class="p-2 text-gray-500 dark:text-gray-400 hover:text-brand-teal dark:hover:text-white transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-white/5 border border-gray-200 dark:border-white/10 w-10 h-10 flex items-center justify-center shrink-0"
+          >
+            <svg
+              id="theme-icon-light"
+              class="w-5 h-5 hidden dark:block"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+              ></path>
+            </svg>
+            <svg
+              id="theme-icon-dark"
+              class="w-5 h-5 block dark:hidden"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+              ></path>
+            </svg>
+          </button>
+
+          <!-- Notifications Button -->
+          <button
+            class="relative p-2 text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-white/5 border border-gray-200/10 dark:border-white/10 w-10 h-10 flex items-center justify-center shrink-0"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              ></path>
+            </svg>
+            <span
+              class="absolute top-0 right-0 rtl:left-0 rtl:right-auto w-2.5 h-2.5 bg-brand-teal rounded-full shadow-[0_0_8px_rgba(20,184,166,0.8)] border-2 border-white dark:border-gray-900"
+            ></span>
+          </button>
+
+          <!-- Profile Indicator -->
+          <div
+            class="flex items-center gap-3 border-l border-gray-200 dark:border-white/10 pl-4 rtl:border-r rtl:border-l-0 rtl:pr-4 rtl:pl-0"
+          >
+            <div class="text-right rtl:text-left hidden md:block">
+              <p
+                id="header-admin-name"
+                class="text-sm font-bold text-gray-800 dark:text-white whitespace-nowrap"
+                data-i18n="user_name"
+              >
+                Alex Carter
+              </p>
+              <p
+                class="text-xs text-gray-500 dark:text-gray-400"
+                data-i18n="user_role"
+              >
+                Admin
+              </p>
+            </div>
+            <div
+              class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-purple to-brand-teal p-0.5 shrink-0"
+            >
+              <div
+                class="w-full h-full rounded-full bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden"
+              >
+                <img
+                  src="https://ui-avatars.com/api/?name=Alex+Carter&background=a855f7&color=fff"
+                  alt="Avatar"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Content Box -->
+      <div
+        class="flex-1 overflow-y-auto p-4 lg:pl-0 rtl:lg:pr-0 rtl:lg:pl-4 pb-10 scroll-smooth"
+      >
+        <!-- ========================================== -->
+        <!-- PAGE 1: DASHBOARD -->
+        <!-- ========================================== -->
+        <div id="page-dashboard" class="page-content active space-y-6">
+          <!-- Welcome Section -->
+          <div
+            class="flex flex-col md:flex-row justify-between items-center md:items-start text-center md:text-left rtl:md:text-right gap-4 fade-in-up w-full"
+          >
+            <div class="w-full">
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-white"
+                data-i18n="welcome_title"
+              >
+                Welcome back, Alex! 👋
+              </h2>
+              <p
+                class="text-gray-500 dark:text-gray-400 mt-1"
+                data-i18n="welcome_sub"
+              >
+                Here's an overview of your store's performance today.
+              </p>
+            </div>
+            <!-- Live Store Health Score widget (CREATIVE DETAIL) -->
+            <div
+              class="glass-card px-5 py-3 flex items-center justify-center md:justify-start w-full md:w-auto gap-3 border border-brand-teal/20 shrink-0"
+            >
+              <span class="relative flex h-3 w-3">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-teal opacity-75"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-3 w-3 bg-brand-teal"
+                ></span>
+              </span>
+              <div>
+                <p
+                  class="text-xs text-gray-400 uppercase font-semibold whitespace-nowrap"
+                  data-i18n="lbl_live_health_title"
+                >
+                  Live Health Score
+                </p>
+                <p
+                  class="text-sm font-bold text-gray-800 dark:text-white flex items-center justify-center md:justify-start gap-1"
+                >
+                  98.4 / 100
+                  <span
+                    class="text-xs text-brand-teal font-normal"
+                    data-i18n="lbl_live_health_state"
+                    >(Optimal)</span
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+            <!-- Stat 1: Total Sales -->
+            <div
+              class="glass-card p-6 fade-in-up text-center sm:text-left rtl:sm:text-right"
+            >
+              <div
+                class="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-3"
+              >
+                <div>
+                  <p
+                    class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1"
+                    data-i18n="stat_sales"
+                  >
+                    Total Sales
+                  </p>
+                  <h3 class="text-3xl font-bold text-gray-800 dark:text-white">
+                    $24,500
+                  </h3>
+                </div>
+                <div
+                  class="p-3 rounded-2xl bg-brand-purple/10 text-brand-purple shrink-0"
+                >
+                  <svg
+                    class="w-6 h-6 icon-glow"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="mt-4 flex items-center justify-center sm:justify-start gap-2 text-sm"
+              >
+                <span class="text-brand-teal flex items-center gap-1 font-bold">
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    ></path>
+                  </svg>
+                  +12.5%
+                </span>
+                <span
+                  class="text-gray-400 dark:text-gray-500"
+                  data-i18n="vs_last_month"
+                  >vs last month</span
+                >
+              </div>
+            </div>
+
+            <!-- Stat 2: New Orders -->
+            <div
+              class="glass-card p-6 fade-in-up delay-1 text-center sm:text-left rtl:sm:text-right"
+            >
+              <div
+                class="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-3"
+              >
+                <div>
+                  <p
+                    class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1"
+                    data-i18n="stat_orders"
+                  >
+                    New Orders
+                  </p>
+                  <h3 class="text-3xl font-bold text-gray-800 dark:text-white">
+                    342
+                  </h3>
+                </div>
+                <div
+                  class="p-3 rounded-2xl bg-brand-teal/10 text-brand-teal shrink-0"
+                >
+                  <svg
+                    class="w-6 h-6 icon-glow-teal"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="mt-4 flex items-center justify-center sm:justify-start gap-2 text-sm"
+              >
+                <span class="text-brand-teal flex items-center gap-1 font-bold">
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    ></path>
+                  </svg>
+                  +5.2%
+                </span>
+                <span
+                  class="text-gray-400 dark:text-gray-500"
+                  data-i18n="vs_last_month"
+                  >vs last month</span
+                >
+              </div>
+            </div>
+
+            <!-- Stat 3: Active Customers -->
+            <div
+              class="glass-card p-6 fade-in-up delay-2 text-center sm:text-left rtl:sm:text-right"
+            >
+              <div
+                class="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-3"
+              >
+                <div>
+                  <p
+                    class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1"
+                    data-i18n="stat_customers"
+                  >
+                    Active Customers
+                  </p>
+                  <h3 class="text-3xl font-bold text-gray-800 dark:text-white">
+                    1,250
+                  </h3>
+                </div>
+                <div
+                  class="p-3 rounded-2xl bg-blue-500/10 text-blue-500 dark:text-blue-400 shrink-0"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="mt-4 flex items-center justify-center sm:justify-start gap-2 text-sm"
+              >
+                <span
+                  class="text-red-500 dark:text-red-400 flex items-center gap-1 font-bold"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"
+                    ></path>
+                  </svg>
+                  -1.5%
+                </span>
+                <span
+                  class="text-gray-400 dark:text-gray-500"
+                  data-i18n="vs_last_month"
+                  >vs last month</span
+                >
+              </div>
+            </div>
+
+            <!-- Stat 4: Conversion Rate -->
+            <div
+              class="glass-card p-6 fade-in-up delay-3 text-center sm:text-left rtl:sm:text-right"
+            >
+              <div
+                class="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-3"
+              >
+                <div>
+                  <p
+                    class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1"
+                    data-i18n="stat_conversion"
+                  >
+                    Conversion Rate
+                  </p>
+                  <h3 class="text-3xl font-bold text-gray-800 dark:text-white">
+                    4.8%
+                  </h3>
+                </div>
+                <div
+                  class="p-3 rounded-2xl bg-pink-500/10 text-pink-500 dark:text-pink-400 shrink-0"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="mt-4 flex items-center justify-center sm:justify-start gap-2 text-sm"
+              >
+                <span class="text-brand-teal flex items-center gap-1 font-bold">
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    ></path>
+                  </svg>
+                  +0.8%
+                </span>
+                <span
+                  class="text-gray-400 dark:text-gray-500"
+                  data-i18n="vs_last_month"
+                  >vs last month</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Graphs Segment -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in-up delay-2">
+            <div
+              class="glass-card p-6 lg:col-span-2 text-center sm:text-left rtl:sm:text-right"
+            >
+              <h3
+                class="text-lg font-bold mb-4 text-gray-800 dark:text-white"
+                data-i18n="chart_revenue"
+              >
+                Revenue Analysis
+              </h3>
+              <div class="h-72 w-full"><canvas id="revenueChart"></canvas></div>
+            </div>
+            <div
+              class="glass-card p-6 text-center sm:text-left rtl:sm:text-right"
+            >
+              <h3
+                class="text-lg font-bold mb-4 text-gray-800 dark:text-white"
+                data-i18n="chart_category"
+              >
+                Sales by Category
+              </h3>
+              <div class="h-72 w-full flex items-center justify-center">
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Creative Details Block: Instant Promo Code Generator -->
+          <div
+            class="glass-card p-6 fade-in-up flex flex-col md:flex-row items-center justify-between text-center md:text-left rtl:md:text-right gap-6"
+          >
+            <div class="space-y-1 w-full md:w-auto">
+              <h4
+                class="text-lg font-bold text-gray-800 dark:text-white"
+                data-i18n="lbl_promo_title"
+              >
+                Instant Promo Code Generator
+              </h4>
+              <p
+                class="text-sm text-gray-500 dark:text-gray-400"
+                data-i18n="lbl_promo_desc"
+              >
+                Generate instantly active marketing codes directly synced into
+                the payment gateways.
+              </p>
+            </div>
+            <div
+              class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto shrink-0"
+            >
+              <input
+                type="text"
+                id="promoCodePrefix"
+                placeholder="COUPON50"
+                value="BASAFER"
+                class="w-full sm:w-32 bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white text-sm rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-purple text-center sm:text-left rtl:sm:text-right"
+              />
+              <button
+                onclick="generateInstantPromo()"
+                class="w-full sm:w-auto bg-gradient-to-r from-brand-purple to-indigo-600 hover:from-brand-purple/95 text-white font-bold px-6 py-3 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all whitespace-nowrap"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                  ></path>
+                </svg>
+                <span data-i18n="btn_generate_coupon">Generate Coupon</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Orders Data Table -->
+          <div class="glass-card p-0 overflow-hidden fade-in-up delay-3">
+            <div
+              class="p-6 border-b border-gray-200/50 dark:border-white/5 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left rtl:sm:text-right gap-4"
+            >
+              <h3
+                class="text-lg font-bold text-gray-800 dark:text-white"
+                data-i18n="table_recent_orders"
+              >
+                Recent Orders
+              </h3>
+              <button
+                onclick="switchPage('orders')"
+                class="text-sm font-medium text-brand-purple hover:text-brand-teal transition-colors whitespace-nowrap"
+                data-i18n="btn_view_all"
+              >
+                View All
+              </button>
+            </div>
+            <div class="overflow-x-auto w-full max-w-full">
+              <table class="w-full text-left rtl:text-right min-w-[600px]">
+                <thead
+                  class="text-xs uppercase bg-gray-50/50 dark:bg-white/5 text-gray-600 dark:text-gray-400"
+                >
+                  <tr>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_order_id"
+                    >
+                      Order ID
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_customer"
+                    >
+                      Customer
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_date"
+                    >
+                      Date
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i188="th_amount"
+                    >
+                      Amount
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_status"
+                    >
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="dashboard-recent-orders-tbody"
+                  class="divide-y divide-gray-200/50 dark:divide-white/5 text-sm text-gray-600 dark:text-gray-300"
+                >
+                  <!-- Loaded Dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 2: CREATIVE PRODUCTS (Interactive Grid) -->
+        <!-- ========================================== -->
+        <div id="page-products" class="page-content space-y-6">
+          <!-- Page Title Area -->
+          <div
+            class="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left rtl:sm:text-right gap-4 fade-in-up w-full"
+          >
+            <div class="w-full">
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-white"
+                data-i18n="products_title"
+              >
+                Interactive Products
+              </h2>
+              <p
+                class="text-gray-500 dark:text-gray-400 mt-1"
+                data-i18n="products_subtitle"
+              >
+                Manage and preview high-tech products grid.
+              </p>
+            </div>
+            <button
+              onclick="openModal()"
+              class="w-full sm:w-auto bg-brand-purple hover:bg-brand-purple/90 text-white px-5 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg shadow-brand-purple/20 flex items-center justify-center gap-2 shrink-0 transform hover:-translate-y-0.5"
+            >
+              <svg
+                class="w-5 h-5 icon-glow"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                ></path>
+              </svg>
+              <span data-i18n="btn_add_product">Add Product</span>
+            </button>
+          </div>
+
+          <!-- Product Filters & Search -->
+          <div
+            class="glass-card p-4 flex flex-col md:flex-row justify-between items-center gap-4 fade-in-up delay-1"
+          >
+            <div class="relative w-full md:max-w-xs">
+              <input
+                type="text"
+                id="productSearch"
+                oninput="filterProducts()"
+                data-i18n-placeholder="filter_search_placeholder"
+                placeholder="Filter products by title..."
+                class="w-full bg-gray-100/30 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-brand-purple focus:border-transparent block pl-10 pr-4 rtl:pr-10 rtl:pl-4 p-3 outline-none transition-all placeholder-gray-400"
+              />
+              <div
+                class="absolute inset-y-0 left-0 rtl:right-0 rtl:left-auto flex items-center pl-3 rtl:pr-3 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <div class="w-full md:w-auto flex">
+              <select
+                id="categoryFilter"
+                onchange="filterProducts()"
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white text-sm rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple"
+              >
+                <option value="all" data-i18n="opt_all">All Categories</option>
+                <option value="electronics" data-i18n="opt_electronics">
+                  Electronics
+                </option>
+                <option value="clothing" data-i18n="opt_clothing">
+                  Clothing
+                </option>
+                <option value="accessories" data-i18n="opt_accessories">
+                  Accessories
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Creative Products Interactive Grid -->
+          <div
+            id="products-grid"
+            class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 fade-in-up delay-2"
+          >
+            <!-- Cards will be injected by JavaScript -->
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 3: CUSTOMERS PAGE -->
+        <!-- ========================================== -->
+        <div id="page-customers" class="page-content space-y-6">
+          <!-- Page Title Area -->
+          <div
+            class="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left rtl:sm:text-right gap-4 fade-in-up w-full"
+          >
+            <div class="w-full">
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-white"
+                data-i18n="cust_page_title"
+              >
+                Customers Directory
+              </h2>
+              <p
+                class="text-gray-500 dark:text-gray-400 mt-1"
+                data-i18n="cust_page_subtitle"
+              >
+                Manage your client base, view histories, and update statuses.
+              </p>
+            </div>
+            <div
+              class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto shrink-0"
+            >
+              <button
+                onclick="triggerBulkEmail()"
+                class="w-full sm:w-auto bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white px-5 py-3 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2"
+              >
+                <span data-i18n="btn_campaign">Campaign</span>
+              </button>
+              <button
+                onclick="openCustomerModal()"
+                class="w-full sm:w-auto bg-brand-teal hover:bg-brand-teal/90 text-white px-5 py-3 rounded-2xl font-semibold transition-all duration-300 shadow-lg shadow-brand-teal/20 flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
+              >
+                <svg
+                  class="w-5 h-5 icon-glow-teal"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                  ></path>
+                </svg>
+                <span data-i18n="btn_add_customer">Add Customer</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Customer Filters & Search -->
+          <div
+            class="glass-card p-4 flex flex-col md:flex-row justify-between items-center gap-4 fade-in-up delay-1"
+          >
+            <div class="relative w-full md:max-w-xs">
+              <input
+                type="text"
+                id="customerSearch"
+                oninput="filterCustomers()"
+                data-i18n-placeholder="search_cust_placeholder"
+                placeholder="Search by name or email..."
+                class="w-full bg-gray-100/30 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-brand-teal focus:border-transparent block pl-10 pr-4 rtl:pr-10 rtl:pl-4 p-3 outline-none transition-all placeholder-gray-400"
+              />
+              <div
+                class="absolute inset-y-0 left-0 rtl:right-0 rtl:left-auto flex items-center pl-3 rtl:pr-3 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <div class="w-full md:w-auto flex">
+              <select
+                id="customerStatusFilter"
+                onchange="filterCustomers()"
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white text-sm rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-teal"
+              >
+                <option value="all" data-i18n="opt_all_cust">
+                  All Statuses
+                </option>
+                <option value="active" data-i18n="opt_active">Active</option>
+                <option value="vip" data-i18n="opt_vip">VIP</option>
+                <option value="inactive" data-i18n="opt_inactive">
+                  Inactive
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Customers Data Table -->
+          <div class="glass-card p-0 overflow-hidden fade-in-up delay-2 w-full">
+            <div class="overflow-x-auto w-full max-w-full">
+              <table class="w-full text-left rtl:text-right min-w-[800px]">
+                <thead
+                  class="text-xs uppercase bg-gray-50/50 dark:bg-white/5 text-gray-600 dark:text-gray-400 border-b border-gray-200/50 dark:border-white/10"
+                >
+                  <tr>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_cust_name"
+                    >
+                      Customer
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_cust_email"
+                    >
+                      Email Address
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_cust_spent"
+                    >
+                      Total Spent
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_cust_orders"
+                    >
+                      Orders
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_cust_rating"
+                    >
+                      Customer Rating (NPS)
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_cust_status"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_cust_action"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="customers-tbody"
+                  class="divide-y divide-gray-200/50 dark:divide-white/5 text-sm"
+                >
+                  <!-- Rendered dynamically via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 4: ORDERS ARCHIVE PAGE -->
+        <!-- ========================================== -->
+        <div id="page-orders" class="page-content space-y-6">
+          <div
+            class="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left rtl:sm:text-right gap-4 fade-in-up w-full"
+          >
+            <div class="w-full">
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-white"
+                data-i18n="orders_title"
+              >
+                Orders Archive
+              </h2>
+              <p
+                class="text-gray-500 dark:text-gray-400 mt-1"
+                data-i18n="orders_subtitle"
+              >
+                Track, filter, and process store transactions live.
+              </p>
+            </div>
+          </div>
+
+          <!-- Filters & Search -->
+          <div
+            class="glass-card p-4 flex flex-col md:flex-row justify-between items-center gap-4 fade-in-up delay-1"
+          >
+            <div class="relative w-full md:max-w-xs">
+              <input
+                type="text"
+                id="orderSearch"
+                oninput="filterOrders()"
+                data-i18n-placeholder="search_orders_placeholder"
+                placeholder="Search order ID or customer..."
+                class="w-full bg-gray-100/30 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-brand-purple focus:border-transparent block pl-10 pr-4 rtl:pr-10 rtl:pl-4 p-3 outline-none transition-all placeholder-gray-400"
+              />
+              <div
+                class="absolute inset-y-0 left-0 rtl:right-0 rtl:left-auto flex items-center pl-3 rtl:pr-3 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <div class="w-full md:w-auto flex">
+              <select
+                id="orderStatusFilter"
+                onchange="filterOrders()"
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white text-sm rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple"
+              >
+                <option value="all" data-i18n="opt_all_orders">
+                  All Statuses
+                </option>
+                <option value="completed" data-i18n="status_completed">
+                  Completed
+                </option>
+                <option value="processing" data-i18n="status_processing">
+                  Processing
+                </option>
+                <option value="shipped" data-i18n="status_shipped">
+                  Shipped
+                </option>
+                <option value="cancelled" data-i18n="status_cancelled">
+                  Cancelled
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Orders Table -->
+          <div class="glass-card p-0 overflow-hidden fade-in-up delay-2 w-full">
+            <div class="overflow-x-auto w-full max-w-full">
+              <table class="w-full text-left rtl:text-right min-w-[700px]">
+                <thead
+                  class="text-xs uppercase bg-gray-50/50 dark:bg-white/5 text-gray-600 dark:text-gray-400 border-b border-gray-200/50 dark:border-white/10"
+                >
+                  <tr>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_order_id"
+                    >
+                      Order ID
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_customer"
+                    >
+                      Customer
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_date"
+                    >
+                      Date
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_amount"
+                    >
+                      Amount
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_status"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="th_cust_action"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="orders-tbody"
+                  class="divide-y divide-gray-200/50 dark:divide-white/5 text-sm text-gray-600 dark:text-gray-300"
+                >
+                  <!-- Loaded dynamically via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 5: CUSTOMER DETAILS -->
+        <!-- ========================================== -->
+        <div id="page-customer_details" class="page-content space-y-6">
+          <div
+            class="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left rtl:sm:text-right gap-4 fade-in-up w-full"
+          >
+            <div class="w-full">
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-white"
+                data-i18n="cust_details_title"
+              >
+                Customer Details Overview
+              </h2>
+              <p
+                class="text-gray-500 dark:text-gray-400 mt-1"
+                data-i18n="cust_details_subtitle"
+              >
+                Inspect total lifecycle value, active notes, and logs.
+              </p>
+            </div>
+            <div
+              class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto shrink-0"
+            >
+              <label
+                class="text-sm font-semibold text-gray-500 uppercase whitespace-nowrap"
+                data-i18n="lbl_select_customer"
+                >Select profile:</label
+              >
+              <select
+                id="customer-profile-selector"
+                onchange="loadCustomerProfile(this.value)"
+                class="w-full sm:w-48 bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white text-sm rounded-xl p-2.5 outline-none focus:ring-2 focus:ring-brand-teal"
+              >
+                <!-- Injected dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 fade-in-up delay-1">
+            <!-- Left Column: Profile Card -->
+            <div
+              class="glass-card p-6 flex flex-col items-center text-center space-y-4"
+            >
+              <div
+                id="cd-avatar-container"
+                class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-brand-purple to-brand-teal shrink-0"
+              >
+                <!-- dynamic avatar -->
+              </div>
+              <div>
+                <h3
+                  id="cd-name"
+                  class="text-xl font-bold text-gray-800 dark:text-white"
+                >
+                  Sarah Smith
+                </h3>
+                <p id="cd-id" class="text-xs text-gray-500 mt-0.5">
+                  #CUST-1001
+                </p>
+              </div>
+              <div
+                id="cd-status"
+                class="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap"
+              >
+                <!-- dynamic status -->
+              </div>
+              <div
+                class="w-full border-t border-gray-100 dark:border-white/5 pt-4 text-left rtl:text-right space-y-2 text-sm"
+              >
+                <div
+                  class="flex flex-col sm:flex-row justify-between gap-1 border-b border-gray-100 dark:border-white/5 pb-2"
+                >
+                  <span class="text-gray-400" data-i18n="lbl_email_col"
+                    >Email:</span
+                  >
+                  <span
+                    id="cd-email"
+                    class="font-medium text-gray-700 dark:text-gray-200 break-all sm:break-normal"
+                    >sarah@example.com</span
+                  >
+                </div>
+                <div
+                  class="flex justify-between border-b border-gray-100 dark:border-white/5 pb-2"
+                >
+                  <span class="text-gray-400" data-i18n="th_cust_orders"
+                    >Orders:</span
+                  >
+                  <span id="cd-orders" class="font-bold text-brand-purple"
+                    >12</span
+                  >
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400" data-i18n="th_cust_spent"
+                    >Total Spent:</span
+                  >
+                  <span id="cd-spent" class="font-bold text-brand-teal"
+                    >$1,250.00</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle Column: Metrics & Loyalty -->
+            <div class="xl:col-span-2 space-y-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div
+                  class="glass-card p-6 flex flex-col sm:flex-row items-center justify-between text-center sm:text-left rtl:sm:text-right gap-4"
+                >
+                  <div>
+                    <p
+                      class="text-gray-400 text-xs uppercase font-semibold"
+                      data-i18n="lbl_loyalty_tier"
+                    >
+                      Loyalty Tier
+                    </p>
+                    <h4
+                      id="cd-tier"
+                      class="text-2xl font-black text-brand-purple mt-1 whitespace-nowrap"
+                    >
+                      Platinum VIP
+                    </h4>
+                  </div>
+                  <div
+                    class="p-3 bg-brand-purple/10 text-brand-purple rounded-2xl shrink-0"
+                  >
+                    <svg
+                      class="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="glass-card p-6 flex flex-col sm:flex-row items-center justify-between text-center sm:text-left rtl:sm:text-right gap-4"
+                >
+                  <div>
+                    <p
+                      class="text-gray-400 text-xs uppercase font-semibold"
+                      data-i18n="lbl_avg_ticket"
+                    >
+                      Average Ticket
+                    </p>
+                    <h4
+                      id="cd-average"
+                      class="text-2xl font-black text-brand-teal mt-1 whitespace-nowrap"
+                    >
+                      $104.16
+                    </h4>
+                  </div>
+                  <div
+                    class="p-3 bg-brand-teal/10 text-brand-teal rounded-2xl shrink-0"
+                  >
+                    <svg
+                      class="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Customer Notes Log -->
+              <div class="glass-card p-6 space-y-4">
+                <h3
+                  class="text-lg font-bold text-gray-800 dark:text-white text-center sm:text-left rtl:sm:text-right"
+                  data-i18n="lbl_admin_notes_title"
+                >
+                  Admin Notes & Logs
+                </h3>
+                <div>
+                  <textarea
+                    id="cd-notes"
+                    rows="3"
+                    data-i18n-placeholder="lbl_admin_notes_placeholder"
+                    placeholder="Write internal operational notes..."
+                    class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple resize-none placeholder-gray-400 text-sm"
+                  ></textarea>
+                </div>
+                <div class="flex justify-end">
+                  <button
+                    onclick="saveCustomerNote()"
+                    class="w-full sm:w-auto bg-brand-purple hover:bg-brand-purple/90 text-white font-semibold text-xs px-4 py-3 sm:py-2.5 rounded-xl transition-all shadow-md"
+                    data-i18n="btn_save_note"
+                  >
+                    Save Profile Note
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 6: GLOBAL SETTINGS -->
+        <!-- ========================================== -->
+        <div id="page-settings" class="page-content space-y-6">
+          <div
+            class="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left rtl:sm:text-right gap-4 fade-in-up w-full"
+          >
+            <div class="w-full">
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-white"
+                data-i18n="settings_title"
+              >
+                Global Settings Console
+              </h2>
+              <p
+                class="text-gray-500 dark:text-gray-400 mt-1"
+                data-i18n="settings_subtitle"
+              >
+                Configure parameters, profile coordinates, and preferences.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in-up delay-1">
+            <!-- Nav Tabs (Settings specific) -->
+            <div class="glass-card p-4 space-y-1 h-fit">
+              <button
+                class="w-full text-center sm:text-left rtl:sm:text-right px-4 py-3 rounded-xl bg-brand-purple/10 text-brand-purple font-semibold text-sm border border-brand-purple/20"
+                data-i18n="lbl_general_config"
+              >
+                General Configuration
+              </button>
+            </div>
+
+            <!-- Settings Controls Form -->
+            <form
+              onsubmit="saveGlobalSettings(event)"
+              class="lg:col-span-2 space-y-6"
+            >
+              <div class="glass-card p-6 space-y-6">
+                <h3
+                  class="text-lg font-bold text-gray-800 dark:text-white text-center sm:text-left rtl:sm:text-right"
+                  data-i18n="lbl_admin_profile"
+                >
+                  Administrator Profile
+                </h3>
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left rtl:text-right"
+                >
+                  <div>
+                    <label
+                      class="block text-xs font-semibold text-gray-500 uppercase mb-1"
+                      data-i18n="lbl_display_name"
+                      >Display Name</label
+                    >
+                    <input
+                      type="text"
+                      id="settings-admin-name"
+                      required
+                      value="Alex Carter"
+                      class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block text-xs font-semibold text-gray-500 uppercase mb-1"
+                      data-i18n="lbl_operational_role"
+                      >Operational Role</label
+                    >
+                    <input
+                      type="text"
+                      disabled
+                      value="System Administrator"
+                      class="w-full bg-gray-100/10 dark:bg-white/2 border border-gray-200/50 dark:border-white/10 text-gray-400 rounded-xl p-3 outline-none text-sm cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- System Parameters -->
+              <div class="glass-card p-6 space-y-6 text-left rtl:text-right">
+                <h3
+                  class="text-lg font-bold text-gray-800 dark:text-white flex items-center justify-center sm:justify-start gap-2"
+                >
+                  <svg
+                    class="w-5 h-5 text-brand-purple"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    ></path>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    ></path>
+                  </svg>
+                  <span data-i18n="lbl_operational_preferences"
+                    >Operational Preferences</span
+                  >
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- Group 1: Notifications & Sound -->
+                  <div class="space-y-4">
+                    <h4
+                      class="text-xs font-bold text-brand-purple uppercase tracking-wider border-b border-gray-200/20 pb-2 text-center sm:text-left rtl:sm:text-right"
+                      data-i18n="lbl_notif_sound_group"
+                    >
+                      Notifications & Sound
+                    </h4>
+                    <div class="space-y-3">
+                      <label class="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id="settings-notifications"
+                          checked
+                          class="mt-1 w-4 h-4 rounded text-brand-purple focus:ring-brand-purple bg-transparent border-gray-300 dark:border-white/10 shrink-0"
+                        />
+                        <div>
+                          <span
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 block leading-tight"
+                            data-i18n="lbl_realtime_dispatch"
+                            >Realtime Order Dispatch</span
+                          >
+                          <span
+                            class="text-xs text-gray-400 block mt-1"
+                            data-i18n="desc_realtime_dispatch"
+                            >Receive instant alerts on new order
+                            placements</span
+                          >
+                        </div>
+                      </label>
+                      <label class="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id="settings-sound"
+                          checked
+                          class="mt-1 w-4 h-4 rounded text-brand-purple focus:ring-brand-purple bg-transparent border-gray-300 dark:border-white/10 shrink-0"
+                        />
+                        <div>
+                          <span
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 block leading-tight"
+                            data-i18n="lbl_audit_sound"
+                            >Audit Sound Alerts</span
+                          >
+                          <span
+                            class="text-xs text-gray-400 block mt-1"
+                            data-i18n="desc_audit_sound"
+                            >Play neon audio chime during checkout
+                            activity</span
+                          >
+                        </div>
+                      </label>
+                      <label class="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id="settings-daily-digest"
+                          class="mt-1 w-4 h-4 rounded text-brand-purple focus:ring-brand-purple bg-transparent border-gray-300 dark:border-white/10 shrink-0"
+                        />
+                        <div>
+                          <span
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 block leading-tight"
+                            data-i18n="lbl_daily_digest"
+                            >Daily Email Digest</span
+                          >
+                          <span
+                            class="text-xs text-gray-400 block mt-1"
+                            data-i18n="desc_daily_digest"
+                            >Receive daily email with overall store
+                            performance</span
+                          >
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Group 2: Security & Sync -->
+                  <div class="space-y-4">
+                    <h4
+                      class="text-xs font-bold text-brand-teal uppercase tracking-wider border-b border-gray-200/20 pb-2 text-center sm:text-left rtl:sm:text-right"
+                      data-i18n="lbl_security_backup_group"
+                    >
+                      Security & Backups
+                    </h4>
+                    <div class="space-y-3">
+                      <label class="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id="settings-backup"
+                          checked
+                          class="mt-1 w-4 h-4 rounded text-brand-purple focus:ring-brand-purple bg-transparent border-gray-300 dark:border-white/10 shrink-0"
+                        />
+                        <div>
+                          <span
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 block leading-tight"
+                            data-i18n="lbl_hourly_backup"
+                            >Hourly Server Backup</span
+                          >
+                          <span
+                            class="text-xs text-gray-400 block mt-1"
+                            data-i18n="desc_hourly_backup"
+                            >Auto backup databases hourly on cloud servers</span
+                          >
+                        </div>
+                      </label>
+                      <label class="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id="settings-mfa"
+                          checked
+                          class="mt-1 w-4 h-4 rounded text-brand-purple focus:ring-brand-purple bg-transparent border-gray-300 dark:border-white/10 shrink-0"
+                        />
+                        <div>
+                          <span
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 block leading-tight"
+                            data-i18n="lbl_enforce_mfa"
+                            >Enforce Admin MFA</span
+                          >
+                          <span
+                            class="text-xs text-gray-400 block mt-1"
+                            data-i18n="desc_enforce_mfa"
+                            >Require multi-factor authorization for admin
+                            profiles</span
+                          >
+                        </div>
+                      </label>
+                      <label class="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id="settings-strict-session"
+                          class="mt-1 w-4 h-4 rounded text-brand-purple focus:ring-brand-purple bg-transparent border-gray-300 dark:border-white/10 shrink-0"
+                        />
+                        <div>
+                          <span
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 block leading-tight"
+                            data-i18n="lbl_strict_session"
+                            >Auto Session Timeout</span
+                          >
+                          <span
+                            class="text-xs text-gray-400 block mt-1"
+                            data-i18n="desc_strict_session"
+                            >Enforce strict session log out after 15 minutes of
+                            inactivity</span
+                          >
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Group 3: Interface & Display -->
+                  <div class="space-y-4">
+                    <h4
+                      class="text-xs font-bold text-pink-500 uppercase tracking-wider border-b border-gray-200/20 pb-2 text-center sm:text-left rtl:sm:text-right"
+                      data-i18n="lbl_interface_perf_group"
+                    >
+                      Interface & Performance
+                    </h4>
+                    <div class="space-y-3">
+                      <label class="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id="settings-auto-theme"
+                          class="mt-1 w-4 h-4 rounded text-brand-purple focus:ring-brand-purple bg-transparent border-gray-300 dark:border-white/10 shrink-0"
+                        />
+                        <div>
+                          <span
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 block leading-tight"
+                            data-i18n="lbl_auto_theme_sync"
+                            >Auto Theme Synchronization</span
+                          >
+                          <span
+                            class="text-xs text-gray-400 block mt-1"
+                            data-i18n="desc_auto_theme_sync"
+                            >Sync light and dark mode state based on local
+                            system settings</span
+                          >
+                        </div>
+                      </label>
+                      <label class="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id="settings-animations"
+                          checked
+                          class="mt-1 w-4 h-4 rounded text-brand-purple focus:ring-brand-purple bg-transparent border-gray-300 dark:border-white/10 shrink-0"
+                        />
+                        <div>
+                          <span
+                            class="text-sm font-semibold text-gray-700 dark:text-gray-200 block leading-tight"
+                            data-i18n="lbl_fluid_animations"
+                            >Ambient Fluid Animations</span
+                          >
+                          <span
+                            class="text-xs text-gray-400 block mt-1"
+                            data-i18n="desc_fluid_animations"
+                            >Enable transitions and ambient glowing
+                            shadows</span
+                          >
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Group 4: Inventory Thresholds -->
+                  <div class="space-y-4">
+                    <h4
+                      class="text-xs font-bold text-amber-500 uppercase tracking-wider border-b border-gray-200/20 pb-2 text-center sm:text-left rtl:sm:text-right"
+                      data-i18n="lbl_inventory_alerts_group"
+                    >
+                      Inventory Alerts & Currency
+                    </h4>
+                    <div class="space-y-3">
+                      <div>
+                        <label
+                          class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                          data-i18n="lbl_low_stock_threshold"
+                          >Low-Stock Alert Trigger</label
+                        >
+                        <input
+                          type="number"
+                          id="settings-stock-threshold"
+                          value="5"
+                          min="1"
+                          max="50"
+                          class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-2.5 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                          data-i18n="lbl_store_currency"
+                          >Store Currency</label
+                        >
+                        <select
+                          id="settings-currency"
+                          class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-2.5 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+                        >
+                          <option value="USD" data-i18n="currency_usd">
+                            USD ($) - US Dollar
+                          </option>
+                          <option value="EUR" data-i18n="currency_eur">
+                            EUR (€) - Euro
+                          </option>
+                          <option value="SAR" data-i18n="currency_sar">
+                            SAR (SR) - Saudi Riyal
+                          </option>
+                          <option value="IQD" data-i18n="currency_iqd">
+                            IQD (ID) - Iraqi Dinar
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end gap-3">
+                <button
+                  type="submit"
+                  class="w-full sm:w-auto bg-brand-purple hover:bg-brand-purple/90 text-white font-semibold text-sm px-6 py-4 sm:py-3 rounded-2xl transition-all shadow-lg shadow-brand-purple/20 transform hover:-translate-y-0.5"
+                  data-i18n="btn_save_settings"
+                >
+                  Save Global Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 7: STUNNING INTERACTIVE ANALYTICS -->
+        <!-- ========================================== -->
+        <div id="page-analytics" class="page-content space-y-6">
+          <div
+            class="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left rtl:sm:text-right gap-4 fade-in-up w-full"
+          >
+            <div class="w-full">
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-white"
+                data-i18n="analytics_title"
+              >
+                Deep Performance Analytics
+              </h2>
+              <p
+                class="text-gray-500 dark:text-gray-400 mt-1"
+                data-i18n="analytics_subtitle"
+              >
+                Inspect your traffic flow, conversion metrics, and visual
+                performance graphs.
+              </p>
+            </div>
+            <!-- Live Users Tracker -->
+            <div
+              class="glass-card px-5 py-3 flex items-center justify-center md:justify-start w-full md:w-auto gap-3 border border-brand-purple/20 shrink-0"
+            >
+              <span class="relative flex h-3 w-3">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-purple opacity-75"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-3 w-3 bg-brand-purple"
+                ></span>
+              </span>
+              <div>
+                <p
+                  class="text-xs text-gray-400 uppercase font-semibold whitespace-nowrap"
+                  data-i18n="lbl_live_traffic_pulse"
+                >
+                  Live Traffic Pulse
+                </p>
+                <p
+                  class="text-sm font-bold text-gray-800 dark:text-white flex items-center justify-center sm:justify-start gap-1"
+                >
+                  142
+                  <span
+                    class="text-xs text-brand-purple font-normal"
+                    data-i18n="lbl_active_visitors"
+                    >Active Session visitors</span
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analytics Metrics Strip -->
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div
+              class="glass-card p-6 text-center sm:text-left rtl:sm:text-right"
+            >
+              <p
+                class="text-gray-500 dark:text-gray-400 text-xs uppercase font-semibold"
+                data-i18n="lbl_bounce_rate"
+              >
+                Bounce Rate
+              </p>
+              <h3
+                class="text-2xl font-extrabold text-gray-800 dark:text-white mt-1"
+              >
+                24.3%
+              </h3>
+              <p
+                class="text-xs text-brand-teal mt-2 flex items-center justify-center sm:justify-start gap-1"
+              >
+                <span class="inline-block">↓ -1.2%</span>
+                <span data-i18n="lbl_vs_yesterday">vs yesterday</span>
+              </p>
+            </div>
+            <div
+              class="glass-card p-6 text-center sm:text-left rtl:sm:text-right"
+            >
+              <p
+                class="text-gray-500 dark:text-gray-400 text-xs uppercase font-semibold"
+                data-i18n="lbl_avg_session"
+              >
+                Average Session
+              </p>
+              <h3
+                class="text-2xl font-extrabold text-gray-800 dark:text-white mt-1"
+              >
+                4m 32s
+              </h3>
+              <p
+                class="text-xs text-brand-teal mt-2 flex items-center justify-center sm:justify-start gap-1"
+              >
+                <span class="inline-block">↑ +15s</span>
+                <span data-i18n="lbl_avg_retention">avg retention</span>
+              </p>
+            </div>
+            <div
+              class="glass-card p-6 text-center sm:text-left rtl:sm:text-right"
+            >
+              <p
+                class="text-gray-500 dark:text-gray-400 text-xs uppercase font-semibold"
+                data-i18n="lbl_funnel_conversion"
+              >
+                Funnel Conversion
+              </p>
+              <h3
+                class="text-2xl font-extrabold text-gray-800 dark:text-white mt-1"
+              >
+                14.8%
+              </h3>
+              <p
+                class="text-xs text-brand-teal mt-2 flex items-center justify-center sm:justify-start gap-1"
+              >
+                <span class="inline-block">↑ +0.8%</span>
+                <span data-i18n="lbl_completion_ctr">completion CTR</span>
+              </p>
+            </div>
+            <div
+              class="glass-card p-6 text-center sm:text-left rtl:sm:text-right"
+            >
+              <p
+                class="text-gray-500 dark:text-gray-400 text-xs uppercase font-semibold"
+                data-i18n="lbl_ltv_cac_ratio"
+              >
+                LTV to CAC Ratio
+              </p>
+              <h3
+                class="text-2xl font-extrabold text-gray-800 dark:text-white mt-1"
+              >
+                3.4x
+              </h3>
+              <p
+                class="text-xs text-brand-purple mt-2 flex items-center justify-center sm:justify-start gap-1"
+                data-i18n="lbl_optimal_acquisition"
+              >
+                Highly Optimal acquisition
+              </p>
+            </div>
+          </div>
+
+          <!-- Custom Visual Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div
+              class="glass-card p-6 text-center sm:text-left rtl:sm:text-right"
+            >
+              <h3
+                class="text-lg font-bold mb-4 text-gray-800 dark:text-white"
+                data-i18n="lbl_acq_channels"
+              >
+                Acquisition Channel Volume
+              </h3>
+              <div class="h-72 w-full flex items-center justify-center">
+                <canvas id="analyticsAcquisitionChart"></canvas>
+              </div>
+            </div>
+            <div
+              class="glass-card p-6 text-center sm:text-left rtl:sm:text-right"
+            >
+              <h3
+                class="text-lg font-bold mb-4 text-gray-800 dark:text-white"
+                data-i18n="lbl_engagement_funnel"
+              >
+                Customer Engagement Funnel Vector
+              </h3>
+              <div class="h-72 w-full flex items-center justify-center">
+                <canvas id="analyticsFunnelChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance Report Table -->
+          <div class="glass-card p-0 overflow-hidden w-full">
+            <div
+              class="p-6 border-b border-gray-200/50 dark:border-white/5 text-center sm:text-left rtl:sm:text-right"
+            >
+              <h3
+                class="text-lg font-bold text-gray-800 dark:text-white"
+                data-i18n="lbl_traffic_index"
+              >
+                Traffic Source Value Index
+              </h3>
+            </div>
+            <div class="overflow-x-auto w-full max-w-full">
+              <table class="w-full text-left rtl:text-right min-w-[700px]">
+                <thead
+                  class="text-xs uppercase bg-gray-50/50 dark:bg-white/5 text-gray-600 dark:text-gray-400"
+                >
+                  <tr>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="lbl_th_source"
+                    >
+                      Source / Medium
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="lbl_th_visitors"
+                    >
+                      Monthly Visitors
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="lbl_th_bounce"
+                    >
+                      Average Bounce Rate
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="lbl_th_value"
+                    >
+                      Conversion Value
+                    </th>
+                    <th
+                      class="px-6 py-4 font-medium whitespace-nowrap"
+                      data-i18n="lbl_th_trend"
+                    >
+                      Index Trend
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="divide-y divide-gray-200/50 dark:divide-white/5 text-sm text-gray-600 dark:text-gray-300"
+                >
+                  <tr
+                    class="transition-colors hover:bg-gray-50 dark:hover:bg-white/5"
+                  >
+                    <td
+                      class="px-6 py-4 font-bold text-gray-800 dark:text-white whitespace-nowrap"
+                    >
+                      Google Organic
+                    </td>
+                    <td class="px-6 py-4 font-medium whitespace-nowrap">
+                      45,100
+                    </td>
+                    <td
+                      class="px-6 py-4 text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                    >
+                      22.4%
+                    </td>
+                    <td
+                      class="px-6 py-4 font-bold text-brand-teal whitespace-nowrap"
+                    >
+                      $8,450.00
+                    </td>
+                    <td class="px-6 py-4 text-brand-teal whitespace-nowrap">
+                      ★★★★★
+                    </td>
+                  </tr>
+                  <tr
+                    class="transition-colors hover:bg-gray-50 dark:hover:bg-white/5"
+                  >
+                    <td
+                      class="px-6 py-4 font-bold text-gray-800 dark:text-white whitespace-nowrap"
+                    >
+                      Instagram Campaigns
+                    </td>
+                    <td class="px-6 py-4 font-medium whitespace-nowrap">
+                      32,800
+                    </td>
+                    <td
+                      class="px-6 py-4 text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                    >
+                      28.1%
+                    </td>
+                    <td
+                      class="px-6 py-4 font-bold text-brand-purple whitespace-nowrap"
+                    >
+                      $6,230.00
+                    </td>
+                    <td class="px-6 py-4 text-brand-purple whitespace-nowrap">
+                      ★★★★☆
+                    </td>
+                  </tr>
+                  <tr
+                    class="transition-colors hover:bg-gray-50 dark:hover:bg-white/5"
+                  >
+                    <td
+                      class="px-6 py-4 font-bold text-gray-800 dark:text-white whitespace-nowrap"
+                    >
+                      Direct URL Input
+                    </td>
+                    <td class="px-6 py-4 font-medium whitespace-nowrap">
+                      18,500
+                    </td>
+                    <td
+                      class="px-6 py-4 text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                    >
+                      14.9%
+                    </td>
+                    <td
+                      class="px-6 py-4 font-bold text-brand-teal whitespace-nowrap"
+                    >
+                      $12,400.00
+                    </td>
+                    <td class="px-6 py-4 text-brand-teal whitespace-nowrap">
+                      ★★★★★
+                    </td>
+                  </tr>
+                  <tr
+                    class="transition-colors hover:bg-gray-50 dark:hover:bg-white/5"
+                  >
+                    <td
+                      class="px-6 py-4 font-bold text-gray-800 dark:text-white whitespace-nowrap"
+                    >
+                      TikTok Referrals
+                    </td>
+                    <td class="px-6 py-4 font-medium whitespace-nowrap">
+                      12,400
+                    </td>
+                    <td
+                      class="px-6 py-4 text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                    >
+                      32.6%
+                    </td>
+                    <td
+                      class="px-6 py-4 font-bold text-brand-purple whitespace-nowrap"
+                    >
+                      $2,100.00
+                    </td>
+                    <td class="px-6 py-4 text-brand-purple whitespace-nowrap">
+                      ★★★☆☆
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PAGE 8: STUNNING MARKETING HUB (NEW!) -->
+        <!-- ========================================== -->
+        <div id="page-marketing" class="page-content space-y-6">
+          <div
+            class="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left rtl:sm:text-right gap-4 fade-in-up w-full"
+          >
+            <div class="w-full">
+              <h2
+                class="text-2xl font-bold text-gray-800 dark:text-white"
+                data-i18n="marketing_title"
+              >
+                Stunning Campaign Desk
+              </h2>
+              <p
+                class="text-gray-500 dark:text-gray-400 mt-1"
+                data-i18n="marketing_subtitle"
+              >
+                Build campaigns, design live banners and monitor ROI with
+                real-time feedback.
+              </p>
+            </div>
+          </div>
+
+          <!-- Campaigns Visual List -->
+          <div class="space-y-4">
+            <h3
+              class="text-lg font-bold text-gray-800 dark:text-white text-center sm:text-left rtl:sm:text-right"
+              data-i18n="lbl_active_campaigns_title"
+            >
+              Active Campaigns Dashboard
+            </h3>
+            <div
+              id="campaigns-grid"
+              class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 fade-in-up"
+            >
+              <!-- Loaded via JS -->
+            </div>
+          </div>
+
+          <!-- Creative Workspace: Interactive Banner Builder & Launch Form -->
+          <div
+            class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-left rtl:text-right"
+          >
+            <!-- Ad Creative Builder Parameters -->
+            <div class="glass-card p-6 space-y-4">
+              <h3
+                class="text-lg font-bold text-gray-800 dark:text-white text-center sm:text-left rtl:sm:text-right"
+                data-i18n="lbl_campaign_creator"
+              >
+                Dynamic Campaign Creator
+              </h3>
+              <form
+                id="campBuilderForm"
+                onsubmit="launchCampaign(event)"
+                class="space-y-4"
+              >
+                <div>
+                  <label
+                    class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                    data-i18n="lbl_campaign_headline"
+                    >Campaign Headline Name</label
+                  >
+                  <input
+                    type="text"
+                    id="campBuilderName"
+                    required
+                    oninput="updateAdPreview()"
+                    placeholder="Cyber Horizon Launch"
+                    class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+                  />
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                      data-i18n="lbl_platform_channel"
+                      >Platform Channel</label
+                    >
+                    <select
+                      id="campBuilderPlatform"
+                      onchange="updateAdPreview()"
+                      class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+                    >
+                      <option value="instagram" data-i18n="opt_instagram">
+                        Instagram Grid
+                      </option>
+                      <option value="tiktok" data-i18n="opt_tiktok">
+                        TikTok Video Ad
+                      </option>
+                      <option value="google" data-i18n="opt_google">
+                        Google Paid Network
+                      </option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                      data-i18n="lbl_discount_coupon"
+                      >Discount % Coupon</label
+                    >
+                    <input
+                      type="number"
+                      id="campBuilderDiscount"
+                      required
+                      oninput="updateAdPreview()"
+                      value="20"
+                      min="5"
+                      max="95"
+                      class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+                    />
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                      data-i18n="lbl_budget_allocation"
+                      >Budget Allocation ($)</label
+                    >
+                    <input
+                      type="number"
+                      id="campBuilderBudget"
+                      required
+                      value="2000"
+                      class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                      data-i18n="lbl_creative_color"
+                      >Creative Styling Color</label
+                    >
+                    <select
+                      id="campBuilderColor"
+                      onchange="updateAdPreview()"
+                      class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+                    >
+                      <option
+                        value="from-purple-500 to-indigo-600"
+                        data-i18n="opt_grad_purple"
+                      >
+                        Purple Retro Gradient
+                      </option>
+                      <option
+                        value="from-teal-400 to-emerald-600"
+                        data-i18n="opt_grad_teal"
+                      >
+                        Cyberpunk Teal Forest
+                      </option>
+                      <option
+                        value="from-pink-500 to-rose-600"
+                        data-i18n="opt_grad_pink"
+                      >
+                        Neon Sunset Dream
+                      </option>
+                      <option
+                        value="from-blue-500 to-cyan-500"
+                        data-i18n="opt_grad_blue"
+                      >
+                        Aether Plasma Blue
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="pt-2">
+                  <button
+                    type="submit"
+                    class="w-full bg-gradient-to-r from-brand-purple to-indigo-600 hover:from-brand-purple/95 text-white font-bold p-4 sm:p-3.5 rounded-xl shadow-lg shadow-brand-purple/20 transition-all transform hover:-translate-y-0.5"
+                    data-i18n="btn_launch_campaign"
+                  >
+                    Launch Promotional Campaign
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Live Creative Ad mock Preview Panel -->
+            <div
+              class="glass-card p-6 flex flex-col justify-between border border-white/5 space-y-4 text-center sm:text-left rtl:sm:text-right"
+            >
+              <div>
+                <h3
+                  class="text-lg font-bold text-gray-800 dark:text-white"
+                  data-i18n="lbl_ad_preview"
+                >
+                  Interactive Ad Mockup Preview
+                </h3>
+                <p
+                  class="text-sm text-gray-400 mt-1"
+                  data-i18n="lbl_ad_preview_desc"
+                >
+                  See real-time changes of the digital graphic before initiating
+                  server-side campaign ad sets.
+                </p>
+              </div>
+
+              <!-- Mockup Frame -->
+              <div
+                class="relative w-full max-w-sm mx-auto flex items-center justify-center py-6"
+                dir="ltr"
+              >
+                <div
+                  id="adPreviewBg"
+                  class="w-full h-48 bg-gradient-to-tr from-purple-500 to-indigo-600 rounded-2xl relative overflow-hidden flex flex-col justify-between p-6 shadow-lg border border-white/10 text-left"
+                >
+                  <!-- Abstract glowing shapes -->
+                  <div
+                    class="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-white/10 blur-xl"
+                  ></div>
+                  <div
+                    class="absolute -left-10 -bottom-10 w-24 h-24 rounded-full bg-white/10 blur-lg"
+                  ></div>
+
+                  <div
+                    class="flex justify-between items-start relative z-10 gap-2"
+                  >
+                    <div>
+                      <p
+                        class="text-[10px] text-white/60 tracking-widest font-bold uppercase"
+                        id="adPreviewPlatform"
+                      >
+                        INSTAGRAM GRID
+                      </p>
+                      <h4
+                        class="text-lg sm:text-xl font-black text-white mt-1 leading-tight break-words"
+                        id="adPreviewName"
+                      >
+                        Cyber Horizon Launch
+                      </h4>
+                    </div>
+                    <span
+                      class="bg-black/30 backdrop-blur-md text-white border border-white/20 text-[10px] px-2.5 py-1 rounded-full font-extrabold uppercase shrink-0"
+                      data-i18n="lbl_compliance_badge"
+                      >Live Creative</span
+                    >
+                  </div>
+
+                  <div
+                    class="relative z-10 flex justify-between items-end gap-2"
+                  >
+                    <div>
+                      <p
+                        class="text-[10px] text-white/70 whitespace-nowrap"
+                        data-i18n="lbl_special_ad_offer"
+                      >
+                        SPECIAL AD OFFER
+                      </p>
+                      <h5
+                        class="text-2xl sm:text-3xl font-black text-white tracking-wide"
+                        id="adPreviewDiscount"
+                      >
+                        20% OFF
+                      </h5>
+                    </div>
+                    <span
+                      class="bg-white text-slate-950 font-bold text-xs px-3 sm:px-4 py-2 rounded-xl shadow-md uppercase shrink-0"
+                      data-i18n="lbl_shop_now"
+                      >Shop Now</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="text-center text-xs text-gray-400 italic"
+                data-i18n="lbl_guarantee_text"
+              >
+                * Guaranteed compliance check passed for dynamic targeting
+                networks.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- INTERACTIVE CREATIVE MODAL: ADD PRODUCT -->
+    <!-- ========================================== -->
+    <div
+      id="addProductModal"
+      class="fixed inset-0 bg-black/60 backdrop-blur-md hidden items-center justify-center z-50 p-4 transition-all duration-300"
+    >
+      <div
+        class="glass-panel w-full max-w-lg rounded-3xl overflow-hidden p-6 relative transform scale-95 transition-all duration-300 flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
+      >
+        <button
+          onclick="closeModal()"
+          class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-red-500 transition-colors"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+
+        <div
+          class="text-center sm:text-left rtl:sm:text-right pr-6 rtl:pr-0 rtl:pl-6"
+        >
+          <h3
+            id="modalProductTitle"
+            class="text-xl font-bold text-gray-800 dark:text-white text-gradient"
+            data-i18n="modal_add_title"
+          >
+            Create Cyber Product
+          </h3>
+          <p
+            id="modalProductSubtitle"
+            class="text-sm text-gray-500 dark:text-gray-400"
+            data-i18n="modal_add_subtitle"
+          >
+            Add a brand new item into your interactive grid catalog.
+          </p>
+        </div>
+
+        <form
+          id="productForm"
+          onsubmit="saveProduct(event)"
+          class="space-y-4 text-left rtl:text-right"
+        >
+          <!-- Hidden inputs for Edit identification -->
+          <input type="hidden" id="editProdId" value="" />
+          <div>
+            <label
+              class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+              data-i18n="lbl_prod_title"
+              >Product Title</label
+            >
+            <input
+              type="text"
+              id="newProdTitle"
+              required
+              class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                data-i18n="lbl_prod_price"
+                >Price ($)</label
+              >
+              <input
+                type="number"
+                step="0.01"
+                id="newProdPrice"
+                required
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                data-i18n="lbl_prod_stock"
+                >Stock Qty</label
+              >
+              <input
+                type="number"
+                id="newProdStock"
+                required
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                data-i18n="lbl_prod_category"
+                >Category</label
+              >
+              <select
+                id="newProdCategory"
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+              >
+                <option value="electronics" data-i18n="opt_electronics">
+                  Electronics
+                </option>
+                <option value="clothing" data-i18n="opt_clothing">
+                  Clothing
+                </option>
+                <option value="accessories" data-i18n="opt_accessories">
+                  Accessories
+                </option>
+              </select>
+            </div>
+            <div>
+              <label
+                class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                data-i18n="lbl_prod_img"
+                >Visual Colorway</label
+              >
+              <select
+                id="newProdColor"
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+              >
+                <option
+                  value="from-purple-500 to-indigo-600"
+                  data-i18n="color_purple_haze"
+                >
+                  Purple Haze
+                </option>
+                <option
+                  value="from-teal-400 to-emerald-600"
+                  data-i18n="color_teal_forest"
+                >
+                  Teal Forest
+                </option>
+                <option
+                  value="from-pink-500 to-rose-600"
+                  data-i18n="color_pink_sunset"
+                >
+                  Pink Sunset
+                </option>
+                <option
+                  value="from-blue-500 to-cyan-500"
+                  data-i18n="color_blue_plasma"
+                >
+                  Blue Plasma
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dynamic Image Upload Section (CREATIVE DETAIL) -->
+          <div>
+            <label
+              class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+              data-i18n="lbl_prod_image_upload"
+              >Product Image File (Optional)</label
+            >
+            <input
+              type="file"
+              id="newProdImage"
+              accept="image/*"
+              class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-2 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:font-semibold file:bg-brand-purple file:text-white hover:file:bg-brand-purple/90 file:cursor-pointer"
+            />
+          </div>
+
+          <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onclick="closeModal()"
+              class="w-full sm:w-auto px-5 py-3 rounded-xl bg-gray-200/50 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+              data-i18n="btn_cancel"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="w-full sm:w-auto px-5 py-3 rounded-xl bg-brand-purple hover:bg-brand-purple/90 text-white font-semibold transition-colors shadow-lg shadow-brand-purple/20"
+              data-i18n="btn_save"
+            >
+              Save Product
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- NEW INTERACTIVE CREATIVE MODAL: ADD CUSTOMER -->
+    <div
+      id="addCustomerModal"
+      class="fixed inset-0 bg-black/60 backdrop-blur-md hidden items-center justify-center z-50 p-4 transition-all duration-300"
+    >
+      <div
+        class="glass-panel w-full max-w-lg rounded-3xl overflow-hidden p-6 relative transform scale-95 transition-all duration-300 flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
+      >
+        <button
+          onclick="closeCustomerModal()"
+          class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-red-500 transition-colors"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+        <div
+          class="text-center sm:text-left rtl:sm:text-right pr-6 rtl:pr-0 rtl:pl-6"
+        >
+          <h3
+            class="text-xl font-bold text-gray-800 dark:text-white text-gradient"
+            data-i18n="modal_add_cust_title"
+          >
+            Add Customer
+          </h3>
+          <p
+            class="text-sm text-gray-500 dark:text-gray-400"
+            data-i18n="modal_add_cust_subtitle"
+          >
+            Register a new buyer account into the directory.
+          </p>
+        </div>
+        <form
+          id="customerForm"
+          onsubmit="saveCustomer(event)"
+          class="space-y-4 text-left rtl:text-right"
+        >
+          <div>
+            <label
+              class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+              data-i18n="lbl_cust_fullname"
+              >Full Name</label
+            >
+            <input
+              type="text"
+              id="custName"
+              required
+              class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+              data-i18n="lbl_cust_email"
+              >Email Address</label
+            >
+            <input
+              type="email"
+              id="custEmail"
+              required
+              class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+            />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                data-i18n="lbl_cust_status"
+                >Account Status</label
+              >
+              <select
+                id="custStatus"
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+              >
+                <option value="active" data-i18n="opt_active">Active</option>
+                <option value="vip" data-i18n="opt_vip">VIP</option>
+                <option value="inactive" data-i18n="opt_inactive">
+                  Inactive
+                </option>
+              </select>
+            </div>
+            <div>
+              <label
+                class="block text-xs font-semibold uppercase text-gray-500 mb-1"
+                data-i18n="lbl_cust_spent"
+                >Total Spent ($)</label
+              >
+              <input
+                type="number"
+                step="0.01"
+                id="custSpent"
+                required
+                class="w-full bg-gray-100/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 text-gray-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-purple transition-all text-sm"
+              />
+            </div>
+          </div>
+          <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onclick="closeCustomerModal()"
+              class="w-full sm:w-auto px-5 py-3 rounded-xl bg-gray-200/50 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+              data-i18n="btn_cancel"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="w-full sm:w-auto px-5 py-3 rounded-xl bg-brand-teal hover:bg-brand-teal/90 text-white font-semibold transition-colors shadow-lg shadow-brand-teal/20"
+              data-i18n="btn_save_customer"
+            >
+              Save Customer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- UI Custom Floating Toast Container -->
+    <div
+      id="toast-container"
+      class="fixed top-6 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-6 rtl:sm:right-auto rtl:sm:left-6 z-50 flex flex-col gap-2 w-[90%] sm:w-auto max-w-sm"
+    ></div>
+    <script src="./index.js"></script>
+  </body>
+</html>
